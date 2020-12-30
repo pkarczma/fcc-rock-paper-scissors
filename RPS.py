@@ -1,21 +1,45 @@
 # The example function below keeps track of the opponent's history and plays whatever the opponent played two plays ago. It is not a very good player so you will need to change the code to pass the challenge.
 
 import random
+import numpy as np
 import pandas as pd
+import tensorflow as tf
+from tensorflow import keras
 
-df = None
+df_x = None
+df_y = None
+model = None
+moves = ['R', 'P', 'S']
+ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
 
 def player(prev_play, opponent_history=[]):
-    global df
+    global df_x
+    global df_y
+    global model
     if prev_play == '':
-        df = pd.DataFrame()
+        df_x = pd.DataFrame()
+        df_y = pd.DataFrame()
+        model = keras.Sequential([
+            keras.layers.Dense(5, input_shape=(5,)),
+            keras.layers.Dense(3, activation='softmax')
+        ])
+        model.compile(optimizer='adam',
+            loss='sparse_categorical_crossentropy',
+            metrics=['accuracy'])
         opponent_history = []
     else:
-        opponent_history.append(prev_play)
+        opponent_history.append(moves.index(prev_play))
 
-    guess = random.choice(['R', 'P', 'S'])
+    guess = random.choice(moves)
 
-    if len(opponent_history) >= 5:
-        df = df.append(pd.Series(opponent_history[-5:]), ignore_index=True)
+    if len(opponent_history) > 5:
+        df_x = df_x.append(pd.Series(opponent_history[-6:-1]), ignore_index=True).astype('int8')
+        df_y = df_y.append(pd.Series(opponent_history[-1]), ignore_index=True).astype('int8')
+
+    if len(opponent_history) >= 20:
+        model.fit(df_x, df_y, epochs=3, verbose=0)
+        test = pd.DataFrame([opponent_history[-5:]])
+        predictions = model.predict([test])
+        guess = ideal_response[moves[np.argmax(predictions[0])]]
 
     return guess
