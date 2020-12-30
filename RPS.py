@@ -13,11 +13,9 @@ def player(prev_play, opponent_history=[]):
     else:
         opponent_history.append(prev_play)
 
-    guess = "R"
-    if len(opponent_history) > 2:
-        guess = opponent_history[-2]
+    guess = random.choice(['R', 'P', 'S'])
 
     if len(opponent_history) >= 5:
         df = df.append(pd.Series(opponent_history[-5:]), ignore_index=True)
 
-    return random.choice([guess, "R", "P", "S"])
+    return guess
