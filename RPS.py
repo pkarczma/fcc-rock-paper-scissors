@@ -14,11 +14,8 @@ moves = ['R', 'P', 'S']
 ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
 
 def player(prev_play, opponent_history=[]):
-    global df_x
-    global df_y
-    global model
+    global df_x, df_y, model
     if prev_play == '':
-        print("--------------------First round----------------------")
         df_x = pd.DataFrame()
         df_y = pd.DataFrame()
         model = keras.Sequential([
