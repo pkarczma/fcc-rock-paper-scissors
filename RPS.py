@@ -10,6 +10,7 @@ df_x = None
 df_y = None
 model = None
 hlen = 5
+hentries = 20
 moves = ['R', 'P', 'S']
 ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
 
@@ -35,7 +36,7 @@ def player(prev_play, opponent_history=[]):
         df_x = df_x.append(pd.Series(opponent_history[-(hlen+1):-1]), ignore_index=True).astype('int8')
         df_y = df_y.append(pd.Series(opponent_history[-1]), ignore_index=True).astype('int8')
 
-    if len(opponent_history) >= (hlen+20):
+    if len(opponent_history) >= (hlen+hentries):
         model.fit(df_x, df_y, epochs=3, verbose=0)
         test = pd.DataFrame([opponent_history[-hlen:]])
         predictions = model.predict([test])
