@@ -36,7 +36,7 @@ def player(prev_play, opponent_history=[]):
         df_train_y = df_train_y.append(pd.Series(opponent_history[-1]), ignore_index=True).astype('int8')
 
     if len(opponent_history) >= (hlen+hentries):
-        model.fit(df_train_x, df_train_y, epochs=3, verbose=0)
+        model.fit(df_train_x, df_train_y, epochs=5, verbose=0)
         df_test_x = pd.DataFrame([opponent_history[-hlen:]])
         predictions = model.predict([df_test_x])
         guess = ideal_response[moves[np.argmax(predictions[0])]]
