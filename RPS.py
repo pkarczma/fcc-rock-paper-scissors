@@ -10,8 +10,14 @@ hlen = 5
 hentries = 20
 moves = ['R', 'P', 'S']
 ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
+use_markov_chain = True
 
 def player(prev_play, opponent_history=[]):
+    if use_markov_chain == True:
+        # TODO
+        guess = random.choice(moves)
+        return guess
+
     global df_train_x, df_train_y, model
     if prev_play == '':
         df_train_x = pd.DataFrame()
