@@ -3,15 +3,19 @@ import numpy as np
 import pandas as pd
 from tensorflow import keras
 
+moves = ['R', 'P', 'S']
+ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
+
+# Variables for Keras method
+use_keras = False
 df_train_x = None
 df_train_y = None
 model = None
 hlen = 5
 hentries = 20
-moves = ['R', 'P', 'S']
-ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
+
+# Variables for Markov Chain method
 use_markov_chain = True
-use_keras = False
 pair_keys = ['RR', 'RP', 'RS', 'PR', 'PP', 'PS', 'SR', 'SP', 'SS']
 matrix = {}
 memory = 0.9
@@ -41,12 +45,9 @@ def player(prev_play, opponent_history=[]):
             if max(matrix[curr_key].values()) != min(matrix[curr_key].values()):
                 prediction = max([(v, k) for k, v in matrix[curr_key].items()])[1]
                 guess = ideal_response[prediction]
-            my_history.append(guess)
-            return guess
 
-        if len(my_history) < 2:
-            my_history.append(guess)
-            return guess
+        my_history.append(guess)
+        return guess
         
     if use_keras == True:
         global df_train_x, df_train_y, model
