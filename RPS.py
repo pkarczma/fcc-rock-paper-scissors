@@ -38,15 +38,13 @@ def player(prev_play, opponent_history=[]):
                 matrix[pair_key][key] = memory * matrix[pair_key][key]
             matrix[pair_key][prev_play] += 1
             curr_key = my_history[-1] + opp_history[-1]
-            if max(matrix[curr_key].values()) == min(matrix[curr_key].values()):
-                guess = random.choice(moves)
-            else:
-                guess = ideal_response[max([(v, k) for k, v in matrix[curr_key].items()])[1]]
+            if max(matrix[curr_key].values()) != min(matrix[curr_key].values()):
+                prediction = max([(v, k) for k, v in matrix[curr_key].items()])[1]
+                guess = ideal_response[prediction]
             my_history.append(guess)
             return guess
 
         if len(my_history) < 2:
-            
             my_history.append(guess)
             return guess
         
