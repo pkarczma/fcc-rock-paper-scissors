@@ -19,7 +19,6 @@ pair_keys = ['RR', 'RP', 'RS', 'PR', 'PP', 'PS', 'SR', 'SP', 'SS']
 matrix = {}
 memory = 0.9
 my_history = []
-opp_history = []
 
 def player(prev_play, opponent_history=[]):
 
@@ -30,23 +29,23 @@ def player(prev_play, opponent_history=[]):
     # - wins with all players with > 60% efficiency
     # - possible to adjust results with 'memory' variable
     if use_markov_chain == True:
-        global matrix, my_history, opp_history
+        global matrix, my_history
         # initialize variables in the first game
         if prev_play == '':
             for pair_key in pair_keys:
                 matrix[pair_key] = {'R': 1 / 3,
                                     'P': 1 / 3,
                                     'S': 1 / 3}
-            opp_history = []
+            opponent_history = []
             my_history = []
         # otherwise, add previous opponent play to the history
         else:
-            opp_history.append(prev_play)
+            opponent_history.append(prev_play)
 
         # make a prediction when enough entries in the history
         if len(my_history) >= 2:
             # create a pair from 2 plays ago
-            pair_key = my_history[-2] + opp_history[-2]
+            pair_key = my_history[-2] + opponent_history[-2]
             # introduce a memory loss of earlier observations for that pair,
             # memory decay speed can be adjusted using 'memory' variable
             for key in matrix[pair_key]:
@@ -55,7 +54,7 @@ def player(prev_play, opponent_history=[]):
             matrix[pair_key][prev_play] += 1
 
             # create a pair from the previous play
-            curr_key = my_history[-1] + opp_history[-1]
+            curr_key = my_history[-1] + opponent_history[-1]
             # if the matrix values are not equal for that pair,
             # make a prediction using the move with the higest value
             if max(matrix[curr_key].values()) != min(matrix[curr_key].values()):
