@@ -23,9 +23,12 @@ my_history = []
 opp_history = []
 
 def player(prev_play, opponent_history=[]):
+
+    # Use a random choice by default
+    guess = random.choice(moves)
+
     if use_markov_chain == True:
         global matrix, my_history, opp_history
-        guess = random.choice(moves)
         if prev_play == '':
             for pair_key in pair_keys:
                 matrix[pair_key] = {'R': 1 / 3,
@@ -47,7 +50,6 @@ def player(prev_play, opponent_history=[]):
                 guess = ideal_response[prediction]
 
         my_history.append(guess)
-        return guess
         
     if use_keras == True:
         global df_train_x, df_train_y, model
@@ -65,8 +67,6 @@ def player(prev_play, opponent_history=[]):
         else:
             opponent_history.append(moves.index(prev_play))
 
-        guess = random.choice(moves)
-
         if len(opponent_history) > hlen:
             df_train_x = df_train_x.append(pd.Series(opponent_history[-(hlen+1):-1]), ignore_index=True).astype('int8')
             df_train_y = df_train_y.append(pd.Series(opponent_history[-1]), ignore_index=True).astype('int8')
@@ -77,4 +77,5 @@ def player(prev_play, opponent_history=[]):
             predictions = model.predict([df_test_x])
             guess = ideal_response[moves[np.argmax(predictions[0])]]
 
-        return guess
+    # Return player guess
+    return guess
