@@ -45,20 +45,20 @@ def player(prev_play, opponent_history=[]):
         # make a prediction when enough entries in the history
         if len(my_history) >= 2:
             # create a pair from 2 plays ago
-            pair_key = my_history[-2] + opponent_history[-2]
+            prev_pair = my_history[-2] + opponent_history[-2]
             # introduce a memory loss of earlier observations for that pair,
             # memory decay speed can be adjusted using 'memory' variable
-            for key in matrix[pair_key]:
-                matrix[pair_key][key] = memory * matrix[pair_key][key]
+            for rps_key in matrix[prev_pair]:
+                matrix[prev_pair][rps_key] = memory * matrix[prev_pair][rps_key]
             # then, update matrix for that pair
-            matrix[pair_key][prev_play] += 1
+            matrix[prev_pair][prev_play] += 1
 
-            # create a pair from the previous play
-            curr_key = my_history[-1] + opponent_history[-1]
+            # create a pair from the last play
+            last_pair = my_history[-1] + opponent_history[-1]
             # if the matrix values are not equal for that pair,
             # make a prediction using the move with the higest value
-            if max(matrix[curr_key].values()) != min(matrix[curr_key].values()):
-                prediction = max([(v, k) for k, v in matrix[curr_key].items()])[1]
+            if max(matrix[last_pair].values()) != min(matrix[last_pair].values()):
+                prediction = max([(v, k) for k, v in matrix[last_pair].items()])[1]
                 guess = ideal_response[prediction]
 
         # append my guess to the history
