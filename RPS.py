@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from tensorflow import keras
 
+# Global variables
 moves = ['R', 'P', 'S']
 ideal_response = {'R': 'P', 'P': 'S', 'S': 'R'}
 
